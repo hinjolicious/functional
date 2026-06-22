@@ -5,12 +5,16 @@ Red [
 	Credits: "Gemini AI"
 	Tabs: 4
 	Content: {
-		* Piping / pipelining suport
-		* Mapping support
-		* Filtering support
-		* Folding support
+		* Piping / pipelining suport	"hello" |> uppercase
+		* Mapping support				[a b c] ||> to-string
+		* Filtering support				[1 2 3] || [[x] even? x]
+		* Folding support				[
+		* 
 	}
 ]
+
+#include %support/support.red
+#include %dev.red
 
 ; == PIPE ==
 
@@ -25,7 +29,6 @@ PIPE: function [
 		= == < > <= >= <> =? and or xor not ; comparison, logic
 		in 									; series, context
 	]
-
 	case [
 		; == WORD: Function or Variable
 		word? action [
@@ -84,26 +87,27 @@ FILTER: function [
 	list [series!] "List of values"
 	cond [block!]  "Condition"
 ][
-	arg: cond/1 ; must at least has one argument
-	act: function arg next cond ; construct a function
+	;arg: cond/1 ; must at least has one argument
+	;act: function arg next cond ; construct a function
 	
-	either (length? arg) = 1 [	; 1. One argument: [1 2 3 4] || [[x] even? x]
+	;either (length? arg) = 1 [	; 1. One argument: [1 2 3 4] || [[x] even? x]
 		collect [foreach val list [
-			if act val [keep/only val]
+			;if act val [keep/only val]
+			if r: (pipe :val :cond) [keep/only val]
 		]]
-	][ 							; 2. Multiple arguments: [[3 2][1 4]] || [[a b] a > b] 
-		collect [foreach val list [
-			if apply :act val [keep/only val]
-		]]
-	]
+	;][ 							; 2. Multiple arguments: [[3 2][1 4]] || [[a b] a > b] 
+	;	collect [foreach val list [
+	;		if apply :act val [keep/only val]
+	;	]]
+	;]
 ] ; /filter
 
 ; == FOLD ==
 
 FOLD: function [
 	"Reduces a list to a value according to specified rule."
-	list [series!]				"List of values"
-	spec [block! any-function!]	"Speccification block or function [[acc args init] rule]"
+	list [series!]					"List of values"
+	'spec [any-type!]	"Speccification block or function [[acc args init] rule]"
 ][
 	; == FUNCTION ==
 	
@@ -118,7 +122,7 @@ FOLD: function [
 	acc-name: spec/1/1 ; accumulator name
 	arg-spec: spec/1/2 ; argument spec
 	
-	either 3 <= length? spec [	; has initial value of accumulator?
+	either 3 <= length? spec/1 [	; has initial value of accumulator?
 		acc: reduce spec/1/3	; evaluate it (literal, block, etc.)
 	][
 		acc: first list	; take first item as accumulator's initial value
