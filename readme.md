@@ -17,6 +17,15 @@ The library introduces four primary chainable operators using Red's `op!` evalua
 | `\|\|` | **Filter** | Filters elements of a series based on a given condition. | `[1 2 3] \|\| even?` |
 | `>-` | **Fold** | Reduces a list to a single value using an accumulator rule. | `[1 2 3] >- add` |
 
+More to come:
+* Transpose
+* Zip
+* Group
+* Curry
+* Partial function application
+* List comprehension
+* Etc.
+
 ---
 
 ## 🛠️ Detailed Features & Syntax
@@ -136,7 +145,7 @@ Red [
 
 ---
 
-*Main ideas and engine design by hinjolicious. Project optimized with supplemental architectural insights from Gemini AI & Red/Sensei AI, etc.
+*Main ideas and engine design by hinjolicious. Project optimized with supplemental architectural insights from Gemini AI, Red/Sensei AI, etc.
 
 ```
 
