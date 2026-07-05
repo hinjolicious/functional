@@ -136,7 +136,7 @@ Red [
     Title: "My Functional Program"
 ]
 
-#include %functional.red
+#include %fp.red ; includes functional.red, support files, etc.
 
 ; Start pipelines right away!
 [1 2 3 4 5] ||> [* 10] || [[x] > 25] |> probe
