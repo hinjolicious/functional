@@ -21,7 +21,7 @@ The library introduces four primary chainable operators using Red's `op!` evalua
 
 ## 🛠️ Detailed Features & Syntax
 
-### 1. The Pipe Operator (`\|>`)
+### 1. The Pipe Operator (`|>`)
 The pipe engine is highly versatile and handles multiple types of functional arguments cleanly:
 * **Functions / Words:** `value |> sin`. NOTE: Semantically, we call sin, so no :sin here!.
 * **Simple Block Contexts:** Evaluates directly as an inline expression. E.g., `value |> [* 2]`.
