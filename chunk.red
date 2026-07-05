@@ -1,6 +1,4 @@
 Red []
-;#include %profiler-gab1.red
-;#include %profiler-gregg.red
 
 split-block: function [ ; ACTUALLY FASTER THAN THE PARSE VERSION!
 	"Splits a block into sub-blocks using a delimiter word/value."
