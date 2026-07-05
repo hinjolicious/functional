@@ -12,16 +12,16 @@ The library introduces four primary chainable operators using Red's `op!` evalua
 
 | Operator | Function | Description | Example |
 | :---: | :--- | :--- | :--- |
-| `|>` | **Pipe** | Processes a value through an action or transformation template. | `5 |> sin` |
-| `||>` | **Map** | Transforms each item in a block or series. | `[1 2 3] ||> [* 2]` |
-| `||` | **Filter** | Filters elements of a series based on a given condition. | `[1 2 3] || even?` |
+| `\|>` | **Pipe** | Processes a value through an action or transformation template. | `5 \|> sin` |
+| `\|\|>` | **Map** | Transforms each item in a block or series. | `[1 2 3] \|\|> [* 2]` |
+| `\|\|` | **Filter** | Filters elements of a series based on a given condition. | `[1 2 3] \|\| even?` |
 | `>-` | **Fold** | Reduces a list to a single value using an accumulator rule. | `[1 2 3] >- add` |
 
 ---
 
 ## 🛠️ Detailed Features & Syntax
 
-### 1. The Pipe Operator (`|>`)
+### 1. The Pipe Operator (`\|>`)
 The pipe engine is highly versatile and handles multiple types of functional arguments cleanly:
 * **Functions / Words:** `value |> sin`. NOTE: Semantically, we call sin, so no :sin here!.
 * **Simple Block Contexts:** Evaluates directly as an inline expression. E.g., `value |> [* 2]`.
