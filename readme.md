@@ -27,7 +27,7 @@ More to come:
 * list chunking --> done
 * list flattening --> done
 * range generator --> done
-
+* list and index access in map, filter, fold, group, etc. (if requested!): list ||> [[a b | lst ix] ...code...]
 ---
 
 ## 🛠️ Detailed Features & Syntax
