@@ -44,7 +44,9 @@ step: function [
 	head insert tail copy _body _step ; copy _body, insert _step at its tail
 ]
 
+comment {
 #include %increment.red
 
 do for [i: 0][i < 10][++ i][print i]
 i: 10 while [i > 0] step [-- i][print i]
+}
