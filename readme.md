@@ -23,12 +23,19 @@ More to come:
 * Group (powerful multi-category multi-rule data grouping engine) --> done
   ```red
   [1 2 3 4 5 6] |> [group it [even [even? it] odd [odd? it]]]
-  ;;#[
+  ;#[
   ;  odd: [1 3 5]
   ;  even: [2 4 6]
   ;]
   ```
 * Curry (true purist style currying engine) --> done
+  ```red
+  add10: 'add -> [] -> 10
+  add10 5
+  ; 15
+  'add -> 5 -> 10
+  ;15
+  ```
 * Partial function application (practical real-world PFA) --> done
 * List comprehension (powerful LC) --> done
 * list chunking --> done
