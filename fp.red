@@ -9,6 +9,8 @@ Red []
 #include %support/for-loop.red		; c-style for loop (do-for, while-step)
 #include %support/safe-assign.red	; safe left-to-right assignment: val --> var
 #include %support/reduce-deep.red	; reduce deeply
+#include %support/flatten.red		; flatten nested block
+#include %support/slice.red			; slice / splice block
 
 ; FP Extensions
 #include %range.red		; range generator
