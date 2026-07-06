@@ -23,7 +23,7 @@ More to come:
 * Group
 * Curry --> done
 * Partial function application --> done
-* List comprehension
+* List comprehension --> done
 * list chunking --> done
 * list flattening --> done
 * range generator --> done
