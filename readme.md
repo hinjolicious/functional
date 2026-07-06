@@ -21,13 +21,18 @@ More to come:
 * Transpose (fast matrix tanspose) --> done
 * Zip (data stream zipping) --> done
 * Group (powerful multi-category multi-rule data grouping engine) --> done
+  `[1 2 3 4 5 6] |> [group it [even [even? it] odd [odd? it]]]
+  ;;#[
+  ;  odd: [1 3 5]
+  ;  even: [2 4 6]
+  ;]`
 * Curry (true purist style currying engine) --> done
 * Partial function application (practical real-world PFA) --> done
 * List comprehension (powerful LC) --> done
 * list chunking --> done
 * list flattening --> done
 * range generator --> done
-* list and index access in map, filter, fold, group, etc. (if requested!): list ||> [[a b | lst ix] ...code...]
+* list and index access in map, filter, fold, group, etc. (if requested!): `list ||> [[a b | lst ix] ...code...]`
 ---
 
 ## 🛠️ Detailed Features & Syntax
