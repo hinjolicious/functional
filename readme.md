@@ -18,12 +18,12 @@ The library introduces four primary chainable operators using Red's `op!` evalua
 | `>-` | **Fold** | Reduces a list to a single value using an accumulator rule. | `[1 2 3] >- add` |
 
 More to come:
-* Transpose --> done
-* Zip --> done
-* Group
-* Curry --> done
-* Partial function application --> done
-* List comprehension --> done
+* Transpose (fast matrix tanspose) --> done
+* Zip (data stream zipping) --> done
+* Group (powerful multi-category multi-rule data grouping engine) --> done
+* Curry (true purist style currying engine) --> done
+* Partial function application (practical real-world PFA) --> done
+* List comprehension (powerful LC) --> done
 * list chunking --> done
 * list flattening --> done
 * range generator --> done
