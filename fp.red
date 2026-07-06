@@ -15,3 +15,7 @@ Red []
 ; FP Extensions
 #include %range.red		; range generator
 #include %chunk.red		; block chunking, etc.
+#include %curry.red		; curry
+#include %partial.red	; PFA
+#include %transpose.red	; transpose a matrix
+#include %zip.red		; zip data stream, auto-filled
