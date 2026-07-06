@@ -19,3 +19,4 @@ Red []
 #include %partial.red	; PFA
 #include %transpose.red	; transpose a matrix
 #include %zip.red		; zip data stream, auto-filled
+#include %lc.red		; list comprehension
