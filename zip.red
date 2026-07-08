@@ -32,27 +32,22 @@ note: { zip can be used to transpose matrix, transpose is a specialized function
 
 ZIP: context [
 
-FILLER: function [list][ ; auto-filler helper function
-	either empty? list [none] [
-		e: list/1  case [
-			integer? e	[0]
-			float? e	[0.0]
-			percent? e	[0%]
-			money? e	[$0.00]
-			string? e	[""]
-			char? e		[#" "]
-			logic? e	[false]
-			date? e		[1-Jan-1900]
-			time? e		[0:00:00]
-			tuple? e	[0.0.0]
-			image? e	[make image! [0x0]]
-			bitset? e	[make bitset! ""]
-			block? e	[[]]
-			true		[none]
-		]
-	]
-] ; /FILLER
-
+; filler values
+filler-map: make map! [
+	integer!    0
+	float!      0.0
+	percent!    0%
+	money!      $0.00
+	string!     ""
+	char!       #"^@"
+	logic!      false
+	date!       1-Jan-1900
+	time!       0:00:00
+	tuple!      0.0.0
+	pair!       0x0
+	block!      []
+]
+	
 ZIP: function [
 	"Transposes/zip a matrix (list of lists) - Auto-fill shorter lists"
 	matrix [block!] "Matrix as a block of blocks"
@@ -79,13 +74,13 @@ ZIP: function [
 					repeat i (length? mat) [
 						append/only/dup pad-list mat/:i n
 					]
-					if (length? pad-list) > max-len [
+					if max-len < length? pad-list [
 						;take/last pad-list
 						clear at pad-list (max-len + 1)
 					]
 				]
 				fill [insert/only/dup tail pad-list value needed]
-				true [insert/only/dup tail pad-list (filler mat) needed]
+				true [insert/only/dup tail pad-list (filler-map/(to word! type? mat/1)) needed]
 			]
 		]
 		pad-list
@@ -93,72 +88,62 @@ ZIP: function [
 ] ; /ZIP function
 ] ; /ZIP context
 
-;== API ==
+;API ==
 zip: :zip/zip
 ; /API
 
-comment { ;== TEST ==
+comment { == TEST ==
 
 #include %test/etc/misc.red ; contain "demo" helper function
+demo: :demo/demo
 
 demo ["Test 1: Regular matrix"|
 m1: [ [a b c] [1 2 3] [x y z] ]
-print mold zip m1
+probe zip m1
 ]
-
-demo ["^/Test 2: Non-square matrix"|
+demo ["Test 2: Non-square matrix"|
 m2: [ [A B C] [D E F] ]
-print mold zip m2
+probe zip m2
 ]
-
-demo ["^/Test 3: Jagged matrix (different row lengths)"| 
+demo ["Test 3: Jagged matrix (different row lengths)"| 
 m3: [ [1 2 3] [4 5] [6 7 8 9] ]
-print mold zip m3
+probe zip m3
 ]
-
-demo ["^/Test 4: Single row"|
+demo ["Test 4: Single row"|
 m4: [ [1 2 3 4 5] ]
-print mold zip m4
+probe zip m4
 ]
-
-demo ["^/Test 5: Single column"|
+demo ["Test 5: Single column"|
 m5: [ [1] [2] [3] [4] ]
-print mold zip m5
+probe zip m5
 ]
-
-demo ["^/Test 6: Empty matrix"|
+demo ["Test 6: Empty matrix"|
 m6: []
-print mold zip m6
+probe zip m6
 ]
-
-demo ["^/Cyclic fill test"|
+demo ["Cyclic fill test"|
 m: [[a b][1 2 3 4]] 
-m |> [zip/cyclic it] |> probe
+m |> zip/cyclic |> probe
 ]
-
-demo [|
+demo [
 m: [[a b][1 2 3 4 5]] 
-m |> [zip/cyclic it] |> probe
+m |> zip/cyclic |> probe
 ]
-
-demo ["^/Duplicate fill test"|
+demo ["Duplicate fill test"|
 m: [[a b][1 2 3 4]] 
-m |> [zip/duplicate it] |> probe
+m |> zip/duplicate |> probe
 ]
-
-demo [|
+demo [
 m: [[a b][1 2 3 4 5]] 
-m |> [zip/duplicate it] |> probe
+m |> zip/duplicate |> probe
 ]
-
-demo ["^/Auto fill test"|
+demo ["Auto fill test"|
 m: [ [10 20] [1 2 3 4 5] [[a][b][c]] ] 
-m |> [zip it] |> probe
+m |> zip |> probe
 ]
-
-demo [|
+demo [
 m: [["A" "B"][1 2 3 4 5] [a b]] 
-m |> [zip it] |> probe
+m |> zip |> probe
 ]
 
 } ; /TEST

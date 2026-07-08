@@ -3,7 +3,7 @@ Red []
 #include %../fp.red
 #include %etc/complex.red ; a simple complex math library
 
-; NOTE: This demo is using a custom complex number libary, with custom operator for it to mimic how Python do it.
+; NOTE: This demo is using a custom complex number library, with custom operator for it to mimic how Python do it.
 ; So, this is not to show the performance of this FP library, but how this library can handle complex 
 ; computation with nested operations chaining, etc.
 	

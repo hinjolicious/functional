@@ -1,67 +1,68 @@
 Red []
 
+; Generates 'range' for use in foreach loop (or other purposes)
+;
+; e.g.: foreach i range [-5 5 0.5] [ print i ]
+
 range: function [
 	"Generate a series of numbers based on an integer or a spec block"
 	rng [number! block!]
+	/local start stop step
 ][
-	case [
+	make vector! case [
 		number? rng [ collect [repeat i rng [keep i]] ]
 		block? rng [
-			case [ 
-				(length? rng) = 1 [ collect [repeat i rng/1 [keep i]] ]
-				(length? rng) = 2 [
-					start: rng/1 stop: rng/2 
-					either start > stop 
-						[collect [i: start while [i >= stop][keep i i: i - 1]]]
-						[collect [i: start while [i <= stop][keep i i: i + 1]]]
+			foreach e rng [
+				if not number? e [ 
+					print "ERROR! range: start, stop and step must be a number!"
+					;invalid-arg: ["invalid argument:" :arg1]
+					cause-error 'script 'invalid-arg [rng]
 				]
-				(length? rng) >= 3 [
-					start: rng/1 stop: rng/2 step: rng/3
-					
-					; Guard against 0 step causing an infinite loop
-					if step = 0 [ do make error! "Step cannot be zero" ]
-					
+			]	
+			case [ 
+				1 = length? rng [ collect [repeat i rng/1 [keep i]] ]
+				2 = length? rng [
+					set [start stop] rng 
+					either start > stop [
+						collect [i: start while [i >= stop][keep i i: i - 1]]
+					][
+						collect [i: start while [i <= stop][keep i i: i + 1]]
+					]
+				]
+				3 <= length? rng [
+					set [start stop step] rng
+					if step = 0 [
+						print "ERROR! range: step must be non-zero!"
+						;invalid-arg: ["invalid argument:" :arg1]
+						cause-error 'script 'invalid-arg [rng]						
+					]
 					collect [
 						i: start
 						either step > 0 [
 							while [i <= stop][
 								; round to match step precision if it's a decimal
 								keep either float? step [round/to i step][i]
-								i: i + step
+							i: i + step
 							]
 						][
-							; Handle negative steps gracefully (descending range)
 							while [i >= stop][
 								keep either float? step [round/to i step][i]
-								i: i + step
+							i: i + step
 							]
 						]
 					]
 				]
 			]
 		]
-		true [
-			print ["*** Range Error: " mold rng]
-			do make error! "Wrong argument!"
-		]
 	]
 ]
 
 comment {
-probe range 10			; [1 2 3 4 5 6 7 8 9 10]
-probe range [10]		; [1 2 3 4 5 6 7 8 9 10]
-probe range [5 10]		; [5 6 7 8 9 10]
-probe range [0 1 0.1]	; [0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
-probe range [5 -5]		; [5 4 3 2 1 0 -1 -2 -3 -4 -5]
-probe range [2 -2 -0.5]	; [2.0 1.5 1.0 0.5 0.0 -0.5 -1.0 -1.5 -2.0]
-foreach i range [-2 2 0.5][print i]
-; -2.0
-; -1.5
-; -1.0
-; -0.5
-; 0.0
-; 0.5
-; 1.0
-; 1.5
-; 2.0
+
+range [1 0 -0.1]
+;== make vector! [1.0 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0.0]
+
+foreach i range [-1 1 0.25][prin [i ""]]
+;-1.0 -0.75 -0.5 -0.25 0.0 0.25 0.5 0.75 1.0 >> 
+
 }
