@@ -1,8 +1,5 @@
 Red [Title: "Block Manipulation"]
 
-#include %../../dev.red
-#include %../fp.red
-
 ; == BLOCK SLICING ==
 ;
 ; This block slicing function largely mimic Python's array slicing mechanism, but using one-base index
@@ -155,7 +152,7 @@ splice: function [
     result
 ]
 
-comment {
+;comment {
 #include %../test/etc/misc.red ; contain "demo" helper function
 test:  :demo/test    ; "as" it to whatever make sense
 say:   :demo/display ; ditto
@@ -198,4 +195,4 @@ test [[splice b [none 5] [A B]] [A B A B A 6 7 8 9 10] "from start to 5 replace 
 
 ; etc...
 
-}
+;}
