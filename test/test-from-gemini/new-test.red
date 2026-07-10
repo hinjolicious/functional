@@ -34,7 +34,7 @@ demo {
 }
 
 demo {
-; This is essentiall parallel mapping:
+; This is essentially parallel mapping:
 a: [1 2 3]
 b: [10 20 30]
 c: [100 200 300]
