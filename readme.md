@@ -38,10 +38,14 @@ More to come:
   ```
 * Partial function application (practical real-world PFA) --> done
 * List comprehension (powerful LC) --> done
-* list chunking --> done
-* list flattening --> done
-* range generator --> done
-* list and index access in map, filter, fold, group, etc. (if requested!): `list ||> [[a b | lst ix] ...code...]`
+* List chunking --> done
+* List flattening --> done
+* Range generator --> done
+* List and index access in map, filter, fold, group, etc. (if requested!): `list ||> [[a b | lst ix] ...code...]`
+* Function Combinators (compose, juxt)
+* Infinite & Deferred Generation (lazy / infinite-range)
+* Advanced Predicate Flow (any-pred, all-pred, complement)
+* Frequency & Distinct Uniqueness (frequencies, distinct)
 ---
 
 ## 🛠️ Detailed Features & Syntax
