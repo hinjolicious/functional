@@ -21,3 +21,4 @@ Red []
 #include %zip.red		; zip data stream, auto-filled
 #include %lc.red		; list comprehension
 #include %group.red		; grouping engine
+#include %comp-func.red ; functional compositions (functions chaining)
