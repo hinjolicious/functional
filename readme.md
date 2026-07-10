@@ -43,6 +43,7 @@ More to come:
 * Range generator --> done
 * List and index access in map, filter, fold, group, etc. (if requested!): `list ||> [[a b | lst ix] ...code...]`
 * Function Combinators (compose, juxt)
+  - compose (comp-func, comp-funcs) --> done
 * Infinite & Deferred Generation (lazy / infinite-range)
 * Advanced Predicate Flow (any-pred, all-pred, complement)
 * Frequency & Distinct Uniqueness (frequencies, distinct)
