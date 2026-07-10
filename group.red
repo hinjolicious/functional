@@ -11,7 +11,7 @@ group: function [list rule][
 		foreach [g r] rule [
 			if pipe e :r [
 				either none? result/:g [
-					result/:g: compose [(e)]
+					result/:g: make type? list compose [(e)] ; preserves type!
 				][
 					append result/:g e
 				]

@@ -45,8 +45,6 @@ slice: function [
 	if start <= 0 [start: max 1 len + start] ; zero index are equal to len-0 = len, cyclic behavior!
 	if stop  <= 0 [stop:  max 1 len + stop ] 
 	
-	print [start stop step]	
-	
 	; fast paths for common steps
 	switch step [
 	 1 [ if start > stop [return make blk 0]
@@ -114,8 +112,6 @@ splice: function [
     rep-len: length? rep
     rep-count: 0
 	
-	print [start stop step]	
-
     either step > 0 [
 		i: 1 
 		j: start
@@ -152,47 +148,81 @@ splice: function [
     result
 ]
 
-;comment {
-#include %../test/etc/misc.red ; contain "demo" helper function
-test:  :demo/test    ; "as" it to whatever make sense
-say:   :demo/display ; ditto
-pause: :demo/pause
-demo/halt-it: true ; halt, when output didn't matched expected value
+comment {
+#include %misc.red ; contain "demo" helper function
 
-print "SLICING DEMO ==^/"
+;test:  :demo/test    ; "as" it to whatever make sense
+;say:   :demo/display ; ditto
+;pause: :demo/pause
+;demo/halt-it: true ; halt, when output didn't matched expected value
 
-say [[
-	b: [1 2 3 4 5 6 7 8 9 10]
-	s: "Programmability"
-]]
+demo {
+; == SLICING DEMO ==
 
-test [[slice b []]				[1 2 3 4 5 6 7 8 9 10] "no change"]
-test [[slice b [none none -1]]	[10 9 8 7 6 5 4 3 2 1] "reversed"]
+b: [1 2 3 4 5 6 7 8 9 10]
+s: "Programmability"
+}
+test {
+slice b [] ; not changed
+} [1 2 3 4 5 6 7 8 9 10]
 
-test [[slice b [none none 2] ]	[1 3 5 7 9]		"odds"]
-test [[slice b [none none -2]]	[10 8 6 4 2]	"evens, backward"]
+test {
+slice b [none none -1] ; reversed
+} [10 9 8 7 6 5 4 3 2 1] 
+
+test {
+slice s [none none -1] ; on string
+} "ytilibammargorP"
+
+test {
+slice b [none none 2] ; odds
+} [1 3 5 7 9]
+
+test {
+slice b [9 none -2] ; evens, backward from 9 to 1
+} [9 7 5 3 1]	
 pause
 
-test [[slice b [none 8 3]]	[1 4 7]		 "from start to 8, step 3"]
-test [[slice b [3 none 4]]	[3 7]		 "from 3 to end, step 4"]
-test [[slice b [8 3 -1]] 	[8 7 6 5 4 3] "from 8 to 3, step -1"]
-test [[slice b [8 3 -2]]	[8 6 4]		 "from 8 to 3, step -2"]
-
-test [[slice b [4 6]]	[4 5 6] ]
-test [[slice b [5 5]]	[5]		"1-based behavior"]
+test {
+slice b [5 5] ; 1-based behavior
+} [5]
+test {
+slice b [5] ; as above
+} [5]
 pause
 
-test [[slice s [none none -1]] "ytilibammargorP" "reversed"]
-test [[slice s [none none -3]] "ylaao"]
-test [[slice s [none 5]		 ] "Progr" "from start to 5"]
-test [[slice s [5 100 3] 	 ] "rmit" "clamped to actual length, safe!"]
+test {
+slice s [none none -3]
+} "ylaao"
+
+test {
+slice s [none 5] ; from start to 5
+} "Progr"
+
+test {
+slice s [5 100 3] ; clamped to actual length, safe!
+} "rmit" 
 pause
 
-print "SPLICING DEMO ==^/"
+demo {
+; == SPLICING DEMO ==
+}
 
-test [[splice b [] []] [] "all gone"]
-test [[splice b [none 5] [A B]] [A B A B A 6 7 8 9 10] "from start to 5 replace with [A B], cyclic!"]
+test {
+splice b [] [] ; all gone
+} []
 
+test {
+splice b [none 5] [A B] ; from start to 5 replace with [A B], cyclic!
+} [A B A B A 6 7 8 9 10]
+pause
+
+test {
+splice s [3 -1 3] "+-" ; from 3 and -1 from end, step 3, cyclic!
+} "Pr+gr-mm+bi-ity"
+
+test {
+splice b [-2 -6 -2] [+ - * /] ; replacement is picked as needed
+} [10 9 + 7 - 5 * 3 2 1]
 ; etc...
-
-;}
+}

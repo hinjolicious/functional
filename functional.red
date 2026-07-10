@@ -20,51 +20,57 @@ Red [
 	Tabs: 4
 ]
 
-;=============
-PIPE: function [
-;=============
+PIPE: function [ ;---------------------------------------------------------------------------------------------
 	"Proces value by action(s) (chainable): value |> action1 |> action2 ..." 
 	value	"Value: literal, variable, block, etc."
 	'action "Action: function, code-block, variable, literal, etc."
 ][
 	case [
-		; 1. FUNCTION VALUE
-		any-function? :action [:action] ; e.g.: 5 |> :sin ;replace value with sin function value 
-		; don't make sense? this is an engine, you're responsible in what you're doing with it!
+		; 1. FUNCTION VALUE, e.g.: `value |> :sin`
+		; The engine allow replacing the value with anything, including function value. so, this action will just
+		; return the function value.
+		any-function? :action [:action]
 		
-		; 2. WORD: Function or Variable
+		; 2. WORD, e.g.: `value |> sin`, `value |> pi`, `value |> "hello"`
 		word? action [
 			either any-function? act: get action [ ; get what it refer to
-				; 2.1 Function: call it with the value, e.g.: value |> sin ; sin is called, not assigned! make sense?
+				; 2.1 Function, e.g: `value |> sin`
+				; Call the function with the value as its argument
+				; NOTE: We don't use :sin because semantically we're calling the function, not assigning its value.
 				act :value	
 			][
-				; 2.2 Variable, evaluate it (replace the value), e.g.: value |> "hello" ; again, it's your action!
+				; 2.2 Variable, e.g: `value |> "hello"`
+				; This will just replace previous value with the newer one.
 				act			
 			]
 		]
-		; 3. PATH
+		; 3. PATH, e.g.: `[1 2 3] |> sort/reverse`
+		; This is essentially the same with calling a function, but with a refinement
 		path? action [ 
-			do compose [(action) value] ; for direct execution, e.g.: [1 2 3] |> sort/reverse
+			do compose [(action) value] 
 		]			
-		; 4. BLOCK: Simple Code-Block, Complex Code-Block, "It Template", etc.
+		; 4. BLOCK, e.g.: Simple Code-Block: , Complex Code-Block, "It Template", etc.
 		block? action [ 
+			; 4.1 Empty block, just return it, e.g.: `value |> []` 
+			; NOTE: Your action should make sense for your self!
 			either empty? action [
-				[] ; 4.1 Empty block, just return it, e.g.: value |> [] ; again, your action should make sense for your self!
+				[] 
 			][
 				case [
-					word? arg: action/1 [ ; first element should be the argument(s) or operator
-						either op? get arg [ 
-							; 4.2 "Simple code-block", e.g.: value |> [* 2] 
+					word? elem: first action [ ; first element should be the argument(s) or operator
+						either all [value? elem op? get elem] [ 
+							; 4.2 "Simple code-block", e.g.: `value |> [* 2]`
 							do compose [(value) (action)] 
-						][ ; something else?
-							act: function [it] action ; 4.3 "It Template" (1): value |> [sin it * 2]
+						][
+							; 4.3 "It Template": `value |> [it * 2]`, `value |> [sin it * 2]`
+							act: function [it] action 
 							act value 
 						]
 					]
-					block? arg [ 
-						; 4.5 "Complex code-block" construct (full-fledged literal function / lambda)
-						act: function arg next action 
-						switch/default length? arg [ ; how many arguments?
+					block? elem [ 
+						; 4.4 "Complex code-block" construct (full-fledged literal function / lambda)
+						act: function elem next action 
+						switch/default length? elem [ ; how many arguments?
 							0 [act]			; 4.5.a No argument, e.g.:		  value |> [[] pi]
 							1 [act value]	; 4.5.b Single argument, e.g.:	  value |> [[x] sin x]
 						][apply :act value] ; 4.5.c Multiple arguments, e.g.: value |> [[x y] x + y]
@@ -90,7 +96,7 @@ MAP: function [
 	list	"List of values: literal, variable, block, etc."
 	'action	"Action: function, code-block, variable, literal, etc."	
 ][
-	collect [foreach val list [keep/only pipe val :action]]
+	make type? list collect [foreach val list [keep/only pipe val :action]]
 ]
 
 ||>: make op! :MAP ; Mapping operator: [1 2 3] ||> [/ 10] ||> sin ||> [[x] x ** 2 - x] 
@@ -102,7 +108,7 @@ FILTER: function [
 	list [series!] "List of values"
 	'cond [block! word! lit-word!]	"Condition"
 ][
-	collect [foreach val list [
+	make type? list collect [foreach val list [
 		if (pipe val :cond) [keep/only val]
 	]]
 ] ; /filter
