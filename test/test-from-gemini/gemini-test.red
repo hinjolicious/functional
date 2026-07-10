@@ -9,43 +9,55 @@ demo {
 ;1. The Matrix Collision (Nested it Scopes)
 
 ;If you nest a pipeline inside another pipeline, the inner block will likely want to use it for its own elements. This tests if your library handles lexical scoping or if the inner it accidentally overrides the outer one.
+}
 
+test {
 ;; Expected output: [[5 6] [6 7]]
 ;; The outer 'it' is the sub-vector: [1 2]
 ;; The inner 'it' is the individual integer: 1, 2
 
-[[1 2] [2 3]] ||> [it ||> [it + 4]] |> probe
-;[[5 6] [6 7]]
+[[1 2] [2 3]] ||> [it ||> [it + 4]]
+} [[5 6] [6 7]]
 
+demo {
 ;	* The Challenge: Does the inner it break the outer context, or do you have a mechanism to stack or isolate environments?
 }
+pause
 
 demo {
 ;2. The Mutating Evaluation (Side Effects in the Pipeline)
 
 ;Red handles series by reference. If a function inside your pipeline modifies the series in-place while another part relies on the original structure or length, things can get weird.
+}
 
+test {
 ;; Testing a self-referencing, mutating pipeline
 
 blk: [1 2 3 4 5]
-blk |> [take it] |> [append blk it] |> probe
-;[3 4 5 2]
+blk |> take |> [append blk it] 
+} [2 3 4 5 1]
 
+demo {
 ;	* The Challenge: Does ||> operate on a deep copy of the block, or does it pass references? If it passes references, changing blk mid-stream can cause unexpected memory offsets or infinite loops if the dialect isn't careful about stream termination.
 }
+pause
 
 demo {
 ;3. Red's Native Non-Evaluating Types (Lit-Words & Lit-Paths)
 
 ;Red uses literal types like 'foo (lit-word) or 'foo/bar (lit-path) which suppress evaluation until explicitly requested. If your pipeline preprocesses the block to look for it, it might accidentally evaluate or strip these literal types.
+}
 
+test {
 ;; Expected output: ['a 'b 'c] or similar literal manipulations
 
-['a 'b 'c] ||> [type? it] |> probe
-;[lit-word! lit-word! lit-word!]
+['a 'b 'c] ||> [type? it] 
+} [lit-word! lit-word! lit-word!]
 
+demo {
 ;	* The Challenge: Does your macro/parser leave lit-word! or lit-path! types intact as literals, or does the pipeline force-evaluate them early into standard word! types?
 }
+pause
 
 demo {
 ;4. The Short-Circuiting Control Flow
@@ -59,15 +71,16 @@ my-func: func [] [
 ;probe my-func
 
 ;	* The Challenge: Does it print "Escaped!" or "Failed to escape"? In Rebol/Red derivation dialects, handling dynamic local returns without breaking the outer calling function's scope is historically one of the hardest edge cases to solve.
+}
 
+test {
 ;SOLUTION:
 my-func: func [] [
     [1 2 3] ||> [if it = 1 [throw "Escaped!"]] ; ERROR: can't do this!!!
     "Failed to escape"
 ]
 probe catch [my-func]
-;"Escaped!"
-}
+} "Escaped!"
 
 demo {
 ;The Breakdown
