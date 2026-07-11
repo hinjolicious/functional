@@ -44,6 +44,20 @@ More to come:
 * List and index access in map, filter, fold, group, etc. (if requested!): `list ||> [[a b | lst ix] ...code...]`
 * Function Combinators (compose, juxt)
   - compose (comp-func, comp-funcs) --> done
+  - juxt --> done
+    ```red
+    ;; Complex parallel evaluations inside juxt 
+	[1 2 3 4 5] |> [juxt it [
+		sum							; native sum
+		average						; native average
+		[it >- add]					; sum fold
+ 		[>- [[a b] max a b]]		; max-of fold
+		[>- [[a b] min a b]]		; min-of fold
+		[ ||> [* 10] |> sum ]		; implicit pipeline stub
+		[[x] x ||> [it / 2] |> sum] ; complex process
+	]]
+	;== [15 3 15 5 1 150 7.5]
+    ```
 * Infinite & Deferred Generation (lazy / infinite-range)
 * Advanced Predicate Flow (any-pred, all-pred, complement)
 * Frequency & Distinct Uniqueness (frequencies, distinct)
