@@ -1,5 +1,27 @@
 Red [title: "Miscellaneous" by: "hinjolicious"]
 
+; colorize the console
+gui-console-ctx/terminal/color?: yes
+gui-console-ctx/terminal/theme: #[
+    foreground: [130.187.130]
+    background: [0.0.0]
+    selected: [128.128.128.128]
+	
+    string!: [255.255.100]	; works
+    integer!: [0.255.0]		; works
+    float!: [0.255.0]		; works
+    pair!: [255.0.0]
+    percent!: [255.128.128]
+    datatype!: [255.200.0]	; ?
+	
+    lit-word!: [150.0.255] ;works
+    set-word!: [0.127.255] ; bold] ; works
+	
+    tuple!: [50.255.50]
+    url!: [0.0.255 underline]
+    comment!: [128.255.128]
+]
+
 ; content:
 ; * safe-do, safe-val
 ; * demo, test, assert
@@ -63,27 +85,36 @@ assert [(10 + 20) = 40]
 pause: does [ask "Press ENTER to continue..." print ""]
 
 demo: function [src /local blk][
+	; remove the last "^/" if any
+	;if #"^/" = pick src length? src [take/last src]
 	blk: to block! load src
 	print form src
 	;try [res: do blk] 
 	;if error? :res [res: none]
 	;unless none? res [print ["==" mold res]]
+	print "=> " 
 	res: safe-val safe-do blk
-	unless res = "(unset)" [print ["==" mold res]]
+	unless res = "(unset)" [
+		;print ["^/==" mold res]
+		print [mold res]
+	]
 ]
 
 ; this is a simple interactive/visual 'assert' kind of thing
 test: func [src chk /local blk res][
+	if #"^/" = pick src length? src [take/last src]
 	blk: to block! load src
 	print form src
 	;try/all [res: do blk] 
 	;if error? :res [res: none]
-	res: safe-val safe-do blk
-	prin ["==" mold res]
+	res: mold safe-val safe-do blk
+	chk: mold chk
+	print ["Output  :" res]
+	print ["Expected:" chk]	
 	either res = chk [
-		print " ."
+		print "--> Matched!"
 	][
-		print [" ???^/Expected:" mold chk]
+		print "--> NOT matched!"
 		cause-error 'user 'message ["Output not matched!"]
 	]
 ]

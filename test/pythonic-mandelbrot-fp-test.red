@@ -1,22 +1,21 @@
 Red []
 
 #include %../fp.red
+#include %../support/misc.red
 #include %etc/complex.red ; a simple complex math library
 
-; NOTE: This demo is using a custom complex number libary, with custom operator for it to mimic how Python do it.
+demo {
+; NOTE: This demo is using a custom complex number library, with custom operator for it to mimic how Python do it.
 ; So, this is not to show the performance of this FP library, but how this library can handle complex 
 ; computation with nested operations chaining, etc.
 	
 ;== HELPER ==
 
-range: function [n][ collect [repeat i n [keep i]] ]
-range2: function [start stop][ collect [i: start while [i <= stop][keep i i: i + 1]]] 
 step: function [start step iterations][ ; mimicking ruby's step function
 	collect [foreach i range iterations [
 		keep start + (i * step) ]] ]
 
 ; 1) This is a translation of a Python code from the Rosetta Code which itself is a translation from a Ruby code
-print "1)"
 
 mandelbrot: function [a][ 
 	(range 50) >- [[z _ 0] z c* z c+ a] ]
@@ -27,18 +26,19 @@ rows: collect [foreach y step 1 -0.05 41 [
 		]]
 	]]
 
-foreach row rows [print row] 
+foreach row rows [print row]
+} pause
 
+demo {
 ; 2) This is a full functional style using this FP Library
-print "2)"
 
-print "Functional Mandelbrot Demo"
-print "Note: 'step' mimic Ruby's built-in step function"
-print "      'range' a simple Python-like range function"
-print "* Demonstrate nested operations"
-print "* Operations: |> pipe, ||> map, >- fold, || filter (not used)"
-print "* Accessing outer argument from inner operations"
-print "* Early termination using 'break'"
+; Functional Mandelbrot Demo
+; Note: 'step' mimic Ruby's built-in step function
+;       'range' a simple Python-like range function
+; * Demonstrate nested operations
+; * Operations: |> pipe, ||> map, >- fold, || filter (not used)
+; * Accessing outer argument from inner operations
+; * Early termination using 'break'
 
 (step 1 -0.05 41) ||> [[y] ; level-1
 	(step -2.0 0.0315 80) ||> [[x] ; level-2
@@ -48,11 +48,12 @@ print "* Early termination using 'break'"
 				z c* z c+ complex x y ; the mandelbrot calculation
 			] |> com-abs 
 		) < 2 ["*"]["."]
-	] |> to-string |> [print it it]
-]
+	] |> to-string |> [append it newline] 
+] |> print 
+} pause
 
+demo {
 ; 3) This is translated from a more Pythonic Python code:
-print "3)"
 
 ; Red's true native literal formats for special float states:
 NaN:  1.#NaN ;== 1.#NaN
@@ -68,8 +69,8 @@ mandelbrot: function [z c n][
 	]
 ]
 
-foreach y range2 -20 20 [
-	foreach x range2 -80 30 [
+foreach y range [-20 20] [
+	foreach x range [-80 30] [
 		prin either not NaN? com-real mandelbrot 
 			complex 0 0 
 			(x * 0.02) c+ ((complex 0 1) c* (y * 0.05)) 
@@ -78,16 +79,18 @@ foreach y range2 -20 20 [
 	]
 	print ""
 ]
+} pause
 
+demo {
 ; 4) Using this FP Library
-print "4)"
 
-(range2 -20 20) ||> [* 0.05] ||> [[y]
-	(range2 -80 30) ||> [* 0.02] ||> [[x]
+(range [-20 20]) ||> [* 0.05] ||> [[y]
+	(range [-80 30]) ||> [* 0.02] ||> [[x]
 		either not NaN? com-real mandelbrot 
 			complex 0 0 
 			x c+ ((complex 0 1) c* y) 
 			none 
-		["#"]["."]
-	] |> to-string |> [print it it]
-]
+		["#"]["."] 
+	] |> to-string |> [append it newline]
+] |> print
+}

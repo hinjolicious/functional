@@ -22,3 +22,4 @@ Red []
 #include %lc.red		; list comprehension
 #include %group.red		; grouping engine
 #include %comp-func.red ; functional compositions (functions chaining)
+#include %juxt.red

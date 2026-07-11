@@ -20,7 +20,13 @@ Red [
 	Tabs: 4
 ]
 
-PIPE: function [ ;---------------------------------------------------------------------------------------------
+#include %../dev.red
+
+
+
+PIPE: function [ 
+
+
 	"Proces value by action(s) (chainable): value |> action1 |> action2 ..." 
 	value	"Value: literal, variable, block, etc."
 	'action "Action: function, code-block, variable, literal, etc."
@@ -58,18 +64,31 @@ PIPE: function [ ;--------------------------------------------------------------
 			][
 				case [
 					word? elem: first action [ ; first element should be the argument(s) or operator
+						;logs ["4.1" value action elem]
 						either all [value? elem op? get elem] [ 
 							; 4.2 "Simple code-block", e.g.: `value |> [* 2]`
-							do compose [(value) (action)] 
+							;act: function [
+							;ff: compose [(value) (action)] 
+							;res: do ff
+							;logs ["4.2" value ff "->" res]
+							;res
+							
+							vec: make block! (1 + length? action)
+							append/only vec :value
+							append vec action
+							;logs ["4.2" value action vec]
+							do vec									
 						][
 							; 4.3 "It Template": `value |> [it * 2]`, `value |> [sin it * 2]`
 							act: function [it] action 
+							;logs ["4.3" value action act]
 							act value 
 						]
 					]
 					block? elem [ 
 						; 4.4 "Complex code-block" construct (full-fledged literal function / lambda)
 						act: function elem next action 
+						;logs ["4.4" value action act elem]
 						switch/default length? elem [ ; how many arguments?
 							0 [act]			; 4.5.a No argument, e.g.:		  value |> [[] pi]
 							1 [act value]	; 4.5.b Single argument, e.g.:	  value |> [[x] sin x]
@@ -77,6 +96,7 @@ PIPE: function [ ;--------------------------------------------------------------
 					]
 					true [ ; something else?
 						act: function [it] action ; 4.6 "It Template" (again), e.g.: [10 * it]
+						;logs ["4.6" value action act elem]
 						act value
 					]
 				]
@@ -89,9 +109,11 @@ PIPE: function [ ;--------------------------------------------------------------
 
 |>: make op! :PIPE ; Pipe Operator: x |> sin |> [* pi] or [10 20] |> [[a b] a * b], etc.
 
-;============
+
+
 MAP: function [
-;============
+
+
 	"Process each values in a list by action(s) (chainable): list ||> action1 ||> action2 ..."
 	list	"List of values: literal, variable, block, etc."
 	'action	"Action: function, code-block, variable, literal, etc."	
@@ -101,9 +123,11 @@ MAP: function [
 
 ||>: make op! :MAP ; Mapping operator: [1 2 3] ||> [/ 10] ||> sin ||> [[x] x ** 2 - x] 
 
-;===============
+
+
 FILTER: function [
-;===============
+
+
 	"Filter a list by condition(s) (chainable): list || cond1 || cond2 ..."
 	list [series!] "List of values"
 	'cond [block! word! lit-word!]	"Condition"
@@ -115,12 +139,14 @@ FILTER: function [
 
 ||: make op! :FILTER ; Filter operator: 
 
-;=============
+
+
 FOLD: function [
-;=============
+
+
 	"Fold (reduce) list to values by rules (chainable): list >- rule1 >- rule2 ..."
 	list [series!]					"List of values"
-	'spec [block! word! lit-word!]	"Speccification block or function [[acc args init] rule]"
+	'spec [block! word! lit-word!]	"Specification block or function [[acc args init] rule]"
 ][
 	safe-init: func [val] [ ; safe init for accumulator
 		either any [series? :val map? :val object? :val bitset? :val][copy val][:val] 

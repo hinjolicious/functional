@@ -9,7 +9,8 @@ range: function [
 	rng [number! block!]
 	/local start stop step
 ][
-	make vector! case [
+	;make vector! ; vector would be a bit faster, but application might more limited
+	case [
 		number? rng [ collect [repeat i rng [keep i]] ]
 		block? rng [
 			foreach e rng [
