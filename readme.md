@@ -59,7 +59,6 @@ More to come:
 	;== [15 3 15 5 1 150 7.5]
     ```
   - juxt-map (process a series by multiple actions/functions and produce a summary map) --> done
-    ```
     ```red
 	data |> [juxt-map it [
 		'Mean	[|> [mean it] --> m]
