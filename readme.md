@@ -60,6 +60,51 @@ More to come:
     ```
   - juxt-map (process a series by multiple actions/functions and produce a summary map) --> done
     ```
+    ```red
+	data |> [juxt-map it [
+		'Mean	[|> [mean it] --> m]
+		'Min	minimum
+		'Max	maximum
+		'Range	range
+		'Size	count
+		'Sum	sum
+		'Median median
+		'Modes	modes 
+		
+		'StdDev		[stddev/sm it m]
+		'StdDev-pop [stddev/sm/pop it m]
+		
+		'Variance 		[variance/sm it m]
+		'Variance-pop 	[variance/sm/pop it m]
+		
+		'Mid-Range 		mid-range 
+		'Q1 			q1
+		'Q2 			q2
+		'Q3 			q3
+		'IQR 			iqr
+		'Upper-Outliers upper-outliers
+		'Lower-Outliers lower-outliers
+		'Sum-Square 	sum-square
+		'MAD 			mad
+		'RMS 			rms
+		'SE-Mean 		se-mean
+		
+		'Median-Skewness 		[median-skewness/sm it m]
+		
+		'Skewness				[skewness/sm it m]
+		'Skewness-pop 			[skewness/pop/sm it m]
+		'Kurtosis 				[kurtosis/sm it m]
+		'Kurtosis-pop 			[kurtosis/pop/sm it m]
+		'Kurtosis-excess 		[kurtosis/excess/sm it m]
+		'Kurtosis-excess-pop 	[kurtosis/excess/pop/sm it m]
+		
+		'CV 			coeff-var
+		'RSD 			rel-stddev
+		'Gini 			gini
+		'Freq-Dist 		[freq-dist it 10]
+		'Top-10-Freq	[top-freq it 10]
+		]]
+		|> [ foreach [i j] it [print [i mold j]] ]
     ```
 * Infinite & Deferred Generation (lazy / infinite-range)
 * Advanced Predicate Flow (any-pred, all-pred, complement)
@@ -81,52 +126,7 @@ The folding engine includes a **Shape Guard** to safely handle multidimensional 
 ; Accumulate matrix rows cleanly with dynamic chunk destructuring
 [[1 2][3 4]] >- [[acc [a b]] reduce [acc/1 + a acc/2 + b]]
 
-```red
-data |> [juxt-map it [
-	'Mean	[|> [mean it] --> m]
-	'Min	minimum
-	'Max	maximum
-	'Range	range
-	'Size	count
-	'Sum	sum
-	'Median median
-	'Modes	modes 
-	
-	'StdDev		[stddev/sm it m]
-	'StdDev-pop [stddev/sm/pop it m]
-	
-	'Variance 		[variance/sm it m]
-	'Variance-pop 	[variance/sm/pop it m]
-	
-	'Mid-Range 		mid-range 
-	'Q1 			q1
-	'Q2 			q2
-	'Q3 			q3
-	'IQR 			iqr
-	'Upper-Outliers upper-outliers
-	'Lower-Outliers lower-outliers
-	'Sum-Square 	sum-square
-	'MAD 			mad
-	'RMS 			rms
-	'SE-Mean 		se-mean
-	
-	'Median-Skewness 		[median-skewness/sm it m]
-	
-	'Skewness				[skewness/sm it m]
-	'Skewness-pop 			[skewness/pop/sm it m]
-	'Kurtosis 				[kurtosis/sm it m]
-	'Kurtosis-pop 			[kurtosis/pop/sm it m]
-	'Kurtosis-excess 		[kurtosis/excess/sm it m]
-	'Kurtosis-excess-pop 	[kurtosis/excess/pop/sm it m]
-	
-	'CV 			coeff-var
-	'RSD 			rel-stddev
-	'Gini 			gini
-	'Freq-Dist 		[freq-dist it 10]
-	'Top-10-Freq	[top-freq it 10]
-	]]
-	|> [ foreach [i j] it [print [i mold j]] ]
----
+
 
 ## 💡 Practical Examples
 
