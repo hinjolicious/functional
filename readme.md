@@ -107,7 +107,7 @@ More to come:
     ```
 * Infinite & Deferred Generation (lazy / infinite-range)
 * Frequency & Distinct Uniqueness (frequencies, distinct)
-  top-freq and freq-dist are in https://github.com/hinjolicious/statistics
+  - top-freq and freq-dist are in https://github.com/hinjolicious/statistics
 ---
 
 ## 🛠️ Detailed Features & Syntax
