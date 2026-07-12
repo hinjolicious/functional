@@ -106,8 +106,8 @@ More to come:
 		|> [ foreach [i j] it [print [i mold j]] ]
     ```
 * Infinite & Deferred Generation (lazy / infinite-range)
-* Advanced Predicate Flow (any-pred, all-pred, complement)
 * Frequency & Distinct Uniqueness (frequencies, distinct)
+  top-freq and freq-dist are in https://github.com/hinjolicious/statistics
 ---
 
 ## 🛠️ Detailed Features & Syntax
