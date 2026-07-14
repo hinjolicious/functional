@@ -108,27 +108,36 @@ More to come:
 * Infinite & Deferred Generation (lazy / infinite-range)
   - lazy streamer -> done!
     ```red
-    ; == FUNCTION ==
-    zig: stream 'func ziggurat/seq ; use a direct generator function
+	; == LAZY STREAMER TEST ==
+	
+	; == FUNC ==
+	#include %../statistics/ziggurat.red
+	
+	zig: stream 'func ziggurat/seq ; use a direct generator function
 	probe zig 5
 	
 	; == BLOCK ==
 	ran: stream 'block [random 1000] ; a block to evaluate
-	probe ran 10
+	probe ran 5
+	probe zig 3
 	
 	; == CYCLER ==
 	color: stream 'cycler [red green blue] ; any values
 	probe color 4
+	probe ran 2
 	
 	; == WALKER ==
 	walk: stream 'walker [100.0 2.5] ; start, maximum drift
 	probe walk 5
+	probe color 2
 	
 	; == COUNTER ==
 	counter: stream 'counter [1000 5] ; start, step
 	probe counter 4
+	probe walk 3
 	
 	; == CUSTOM CODE - FIBONACCI STREAMER ==
+	
 	fib: stream 'code [
 		a: 0 b: 1
 		seq: func [][
@@ -138,6 +147,7 @@ More to come:
 	]
 	probe fib 5
 	probe fib 5
+	probe counter 2
     ```
     
 * Frequency & Distinct Uniqueness (frequencies, distinct)
