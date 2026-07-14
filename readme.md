@@ -106,6 +106,7 @@ More to come:
 		|> [ foreach [i j] it [print [i mold j]] ]
     ```
 * Infinite & Deferred Generation (lazy / infinite-range)
+  - state-machine streamer -> tba
   - lazy streamer -> done!
     ```red
 	; == LAZY STREAMER TEST ==
@@ -151,6 +152,7 @@ More to come:
     ```
     
 * Frequency & Distinct Uniqueness (frequencies, distinct)
+  - distinct -> tba
   - top-freq and freq-dist are in https://github.com/hinjolicious/statistics
 ---
 
