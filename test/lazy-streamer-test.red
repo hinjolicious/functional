@@ -10,33 +10,34 @@ demo {
 ; == FUNC ==
 
 zig: stream 'func ziggurat/seq ; use a direct generator function
-zig 1 ; get one item}
+zig 1 ; get one item }
 demo {
-zig 5 ; get 5 now} pause
+zig 5 ; get 5 now } pause
 
 demo {
 ; == BLOCK ==
 ran: stream 'block [random 1000] ; a block to evaluate
-ran 10
+ran 10 ; get 10 items
 } pause
 
 demo {
 ; == CYCLER ==
 color: stream 'cycler [red green blue] ; any values
-color 4
-} pause
+color 4 ; get 4 colors }
+demo {ran 3 ; now get 3 randoms }
+demo {color 2 ; get color again } pause
 
 demo {
 ; == WALKER ==
 walk: stream 'walker [100.0 2.5] ; start, maximum drift
-walk 5
-} pause
+walk 5 } 
+demo {color 2 ; try the color again } pause
 
 demo {
 ; == COUNTER ==
 counter: stream 'counter [1000 5] ; start, step
-counter 4
-} pause
+counter 4 }
+demo {walk 3 ; check the walk } pause
 
 demo {
 ; == CUSTOM CODE - FIBONACCI STREAMER ==
@@ -48,8 +49,10 @@ fib: stream 'code [
 		a
 	]
 ]
-fib 5} pause
-demo {fib 5} pause
+fib 5 ; get 5 fibs } 
+demo {fib 5 } 
+demo {counter 3 ; test the counter }
+demo {fib 5 ; fib still ok? } pause
 
 demo {
 ; == PRIME NUMBERS ==
@@ -71,7 +74,8 @@ pri: stream 'code [ ; simple lazy prime
 		curr
 	]
 ]
-pri 5} pause
+pri 5} 
+demo {fib 3 ; check the fibs }
 demo {pri 5} pause
 
 demo {

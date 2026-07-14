@@ -4,7 +4,7 @@ Red []
 ;
 ; Usage: See example!
 ;
-stream: func ['type 'gen][
+stream: func ['type 'gen /local ob][
 	switch type [
 		'func [
 			func [n] compose/deep [
@@ -21,55 +21,48 @@ stream: func ['type 'gen][
 			]
 		]
 		'cycler [
-			ob: object [
+			func [n] bind compose/deep [
+				if n = 'reset [reset exit]
+				collect [loop n [keep seq]]
+			] object [
 				list: gen
 				pos: list
-				seq: func[][
+				seq: func [][
 					if tail? pos [pos: list]
 					also pos/1 pos: next pos
 				]
-			]
-			func [n] compose/deep [
-				collect [loop n [
-					keep ob/seq
-				]]
+				reset: func [][pos: list]
 			]
 		]
 		'walker [
-			ob: object [
-				current: gen/1
-				max-drift: gen/2
-				seq: func[][
-					current: current + random (max-drift * 2) - max-drift
-				]
-			]
-			func [n] compose/deep [
-				collect [loop n [
-					keep ob/seq
-				]]
+			func [n] bind compose/deep [
+				if n = 'reset [reset exit]
+				collect [loop n [keep seq]]
+			] object [
+				curr: gen/1
+				start: curr
+				drift: gen/2
+				seq: func [][curr: curr + random (drift * 2) - drift]
+				reset: func [][curr: start]
 			]
 		]
 		'counter [
-			ob: object [ 
-				current: gen/1 - gen/2	; start
-				increment: gen/2		; step
-				seq: func[][
-					current: current + increment
-				]
-			]
-			func [n] compose/deep [
-				collect [loop n [
-					keep ob/seq
-				]]
-			]		
+			func [n] bind compose/deep [
+				if n = 'reset [reset exit]
+				collect [loop n [keep seq]]
+			] object [ 
+				curr: gen/1 - gen/2		; start
+				start: curr
+				incr: gen/2				; step
+				seq: func[][curr: curr + incr]
+				reset: func [][curr: start]
+			]	
 		]
 		'code [
-			ob: make object! gen
-			func [n] compose/deep [
-				collect [loop n [
-					keep ob/seq
-				]]
-			]
+			func [n] bind compose/deep [
+				if all [n = 'reset value? 'reset] [reset exit]
+				collect [loop n [keep seq]]
+			] make object! gen
 		]
 	]
 ]
@@ -86,19 +79,23 @@ probe zig 5
 
 ; == BLOCK ==
 ran: stream 'block [random 1000] ; a block to evaluate
-probe ran 10
+probe ran 5
+probe zig 3
 
 ; == CYCLER ==
 color: stream 'cycler [red green blue] ; any values
 probe color 4
+probe ran 2
 
 ; == WALKER ==
 walk: stream 'walker [100.0 2.5] ; start, maximum drift
 probe walk 5
+probe color 2
 
 ; == COUNTER ==
 counter: stream 'counter [1000 5] ; start, step
 probe counter 4
+probe walk 3
 
 ; == CUSTOM CODE - FIBONACCI STREAMER ==
 
@@ -111,6 +108,7 @@ fib: stream 'code [
 ]
 probe fib 5
 probe fib 5
+probe counter 2
 
 ; == PRIME NUMBERS ==
 
@@ -133,6 +131,20 @@ pri: stream 'code [ ; simple lazy prime
 ]
 probe pri 5
 probe pri 5
+probe fib 2
+
+fib2: stream 'code [
+	a: 0 b: 1
+	seq: func [][
+		set [a b] reduce [b a + b]
+		a
+	]
+	reset: func [][a: 0 b: 1]
+]
+probe fib2 5
+probe fib2 5
+fib2 'reset
+probe fib 5
 
 ; See a better test presentation and the 
 ; file streamer example in the test folder!
