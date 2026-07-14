@@ -106,6 +106,40 @@ More to come:
 		|> [ foreach [i j] it [print [i mold j]] ]
     ```
 * Infinite & Deferred Generation (lazy / infinite-range)
+  - lazy streamer -> done!
+    ```red
+    ; == FUNCTION ==
+    zig: stream 'func ziggurat/seq ; use a direct generator function
+	probe zig 5
+	
+	; == BLOCK ==
+	ran: stream 'block [random 1000] ; a block to evaluate
+	probe ran 10
+	
+	; == CYCLER ==
+	color: stream 'cycler [red green blue] ; any values
+	probe color 4
+	
+	; == WALKER ==
+	walk: stream 'walker [100.0 2.5] ; start, maximum drift
+	probe walk 5
+	
+	; == COUNTER ==
+	counter: stream 'counter [1000 5] ; start, step
+	probe counter 4
+	
+	; == CUSTOM CODE - FIBONACCI STREAMER ==
+	fib: stream 'code [
+		a: 0 b: 1
+		seq: func [][
+			set [a b] reduce [b a + b]
+			a
+		]
+	]
+	probe fib 5
+	probe fib 5
+    ```
+    
 * Frequency & Distinct Uniqueness (frequencies, distinct)
   - top-freq and freq-dist are in https://github.com/hinjolicious/statistics
 ---
