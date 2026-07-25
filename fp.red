@@ -23,3 +23,4 @@ Red []
 #include %group.red		; grouping engine
 #include %comp-func.red ; functional compositions (functions chaining)
 #include %juxt.red
+#include %lazy.red

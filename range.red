@@ -6,9 +6,10 @@ Red []
 
 range: function [
 	"Generate a series of numbers based on an integer or a spec block"
-	rng [number! block!]
+	range-block [number! block!]
 	/local start stop step
 ][
+	rng: reduce range-block
 	;make vector! ; vector would be a bit faster, but application might more limited
 	case [
 		number? rng [ collect [repeat i rng [keep i]] ]
@@ -37,7 +38,7 @@ range: function [
 						;invalid-arg: ["invalid argument:" :arg1]
 						cause-error 'script 'invalid-arg [rng]						
 					]
-					collect [
+					res: collect [
 						i: start
 						either step > 0 [
 							while [i <= stop][
@@ -56,6 +57,7 @@ range: function [
 			]
 		]
 	]
+	
 ]
 
 comment {
