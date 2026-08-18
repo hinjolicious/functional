@@ -20,7 +20,7 @@ Red [
 	Tabs: 4
 ]
 
-#include %../dev.red
+;#include %../dev.red
 
 
 
