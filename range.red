@@ -1,71 +1,50 @@
 Red []
 
-; Generates 'range' for use in foreach loop (or other purposes)
-;
-; e.g.: foreach i range [-5 5 0.5] [ print i ]
+#include %support/error.red
 
 range: function [
-	"Generate a series of numbers based on an integer or a spec block"
-	range-block [number! block!]
+	"Generate a range of numbers with step"
+	range-block [block!] "[<start> <stop> <step>]"
 	/local start stop step
 ][
-	rng: reduce range-block
-	;make vector! ; vector would be a bit faster, but application might more limited
-	case [
-		number? rng [ collect [repeat i rng [keep i]] ]
-		block? rng [
-			foreach e rng [
-				if not number? e [ 
-					print "ERROR! range: start, stop and step must be a number!"
-					;invalid-arg: ["invalid argument:" :arg1]
-					cause-error 'script 'invalid-arg [rng]
-				]
-			]	
-			case [ 
-				1 = length? rng [ collect [repeat i rng/1 [keep i]] ]
-				2 = length? rng [
-					set [start stop] rng 
-					either start > stop [
-						collect [i: start while [i >= stop][keep i i: i - 1]]
-					][
-						collect [i: start while [i <= stop][keep i i: i + 1]]
-					]
-				]
-				3 <= length? rng [
-					set [start stop step] rng
-					if step = 0 [
-						print "ERROR! range: step must be non-zero!"
-						;invalid-arg: ["invalid argument:" :arg1]
-						cause-error 'script 'invalid-arg [rng]						
-					]
-					res: collect [
-						i: start
-						either step > 0 [
-							while [i <= stop][
-								; round to match step precision if it's a decimal
-								keep either float? step [round/to i step][i]
-							i: i + step
-							]
-						][
-							while [i >= stop][
-								keep either float? step [round/to i step][i]
-							i: i + step
-							]
-						]
-					]
-				]
-			]
+	if any [empty? range-block  (length? range-block) < 2  (length? range-block) > 3][
+		error "range-block must be [start stop] or [start stop step]" rejoin ["range " mold range-block]
+	]
+	forall range-block [
+		if not number? range-block/1 [
+			error "start stop step must be numbers" rejoin ["range " mold range-block]
+		]
+	]		
+	set [start stop step] reduce range-block
+	either none? step [
+		either start > stop [ 
+			collect [i: start while [i >= stop][keep i i: i - 1]]
+		][
+			collect [i: start while [i <= stop][keep i i: i + 1]]
+		]
+	][
+		if step = 0 [
+			error "range's step must be non-zero!" rejoin ["range " mold range-block]
+		]
+		i: start
+		either step > 0 [
+			collect [ while [i <= stop][
+				keep either float? step [round/to i step][i]
+				i: i + step
+			]]
+		][
+			collect [ while [i >= stop][
+				keep either float? step [round/to i step][i]
+				i: i + step
+			]]
 		]
 	]
-	
 ]
 
 comment {
+print "foreach i range [1 5] [probe i] =>"
+foreach i range [1 5] [probe i]
 
-range [1 0 -0.1]
-;== make vector! [1.0 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0.0]
-
-foreach i range [-1 1 0.25][prin [i ""]]
-;-1.0 -0.75 -0.5 -0.25 0.0 0.25 0.5 0.75 1.0 >> 
-
+print "foreach i range [2 -2 -0.5] [probe i] =>"
+foreach i range [2 -2 -0.5] [probe i]
 }
