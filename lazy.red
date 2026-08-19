@@ -67,8 +67,8 @@ stream: func ['type 'gen /local ob][
 	]
 ]
 
-comment {
-
+comment
+do [
 ; == LAZY STREAMER TEST ==
 
 ; == FUNC ==
@@ -148,4 +148,4 @@ probe fib 5
 
 ; See a better test presentation and the 
 ; file streamer example in the test folder!
-}
+]
